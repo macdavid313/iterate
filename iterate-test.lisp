@@ -428,12 +428,12 @@
   (()()))
 
 (deftest in-packages.generator-access
-    (let ((iter-syms (iterate (generate (sym access) in-packages (list (find-package "COMMON-LISP")))
+    (let ((iter-syms (iterate (generate (sym access) in-packages (list (find-package :common-lisp)))
                               (repeat 1)
                               (next sym)
                               (collect (list sym access)))))
       (equal (multiple-value-list
-              (find-symbol (symbol-name (caar iter-syms)) "COMMON-LISP"))
+              (find-symbol (symbol-name (caar iter-syms)) (find-package :common-lisp)))
              (car iter-syms)))
   t)
 
@@ -449,7 +449,7 @@
   (1 10 ()))
 
 (deftest in-stream.2
-    ;; This fails in cmucl, sbcl and gcl, because string-input-streams
+    ;; This fails in allegro, cmucl, sbcl and gcl, because string-input-streams
     ;; are always open, even after close.
     (let ((s (make-string-input-stream "(")))
       (ignore-errors
@@ -1786,19 +1786,19 @@
           #|(finally (return ,winner))|# )))
   (FINDING expr MAXING func &optional INTO var))
 
-(deftest maxing.1
+(deftest maximizing.1
     (iter (for i in-vector #(1 5 3))
-          (finding i :maxing #'identity))
+          (finding i maximizing #'identity))
   5)
 
-(deftest maxing.2
+(deftest maximizing.2
     (iter (for i in-vector #(1 5 3))
-          (finding i maxing #'identity into foo))
+          (finding i maximizing #'identity into foo))
   nil)
 
-(deftest maxing.3
+(deftest maximizing.3
     (iter (for i in-vector #(2 5 4))
-          (finding i maxing #'identity into foo)
+          (finding i maximizing #'identity into foo)
           (when (evenp i) (sum i)))
   6)
 

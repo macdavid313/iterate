@@ -582,6 +582,7 @@ Evaluate (iterate:display-iterate-clauses) for an overview of clauses"
 	 (*loop-end* (symbol-append 'loop-end- *block-name*))
 	 (*loop-step-used?* nil)
 	 (*loop-end-used?* nil))
+    #+allegro (declare (special *shared-bindings-alist*))
     (process-top-level-decls body)
     (multiple-value-bind (body decls init-code steppers final-code final-prot)
 	(walk-list body)
@@ -2424,12 +2425,12 @@ e.g. (DSETQ (VALUES (a . b) nil c) form)"
 				   (if else (list (walk-expr else)))))))
 
 ;;; (FIRST-TIME-P)
-(def-special-clause FIRST-TIME-P ()
+(def-special-clause first-time-p ()
   "True when evaluated for the first time"
   (return-code :body (list (if-1st-time '(t)))))
 
 ;;; (FIRST-ITERATION-P)
-(def-special-clause FIRST-ITERATION-P ()
+(def-special-clause first-iteration-p ()
   "True within first iteration through the body"
   ;; Like (with ,var = t) (after-each (setq ,var nil))
   ;; except all these clauses shares a single binding.
